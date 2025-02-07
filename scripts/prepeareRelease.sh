@@ -1,3 +1,7 @@
+#!/bin/bash
+#
+set -e -o pipefail
+
 repo="$2"
 releaseVersion="$1"
 sed "s/^version[[:blank:]]*=.*$/version=$version/" "${repo}/gradle.properties"
