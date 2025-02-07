@@ -1,0 +1,6 @@
+repo="$2"
+releaseVersion="$1"
+sed "s/^version[[:blank:]]*=.*$/version=$version/" "${repo}/gradle.properties"
+git -C "${repo}" commit -a -m "Release: ${releaseVersion}"
+git -C "${repo}" tag -a "${releaseVersion}" -m "${releaseVersion}"
+git -C "${repo}" push origin "${releaseVersion}"

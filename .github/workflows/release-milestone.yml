@@ -23,7 +23,7 @@ jobs:
         with:
           repository: eclipse-lmos/lmos-router
           path: lmos-router
-      - run: "ls -l"
+      - run: scripts/prepeareRelease.sh '${{ github.ref_name }}' lmos-router
       #- name: "Create tags"
       #  env:
       #    GH_TOKEN: ${{ github.token }}
