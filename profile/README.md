@@ -43,7 +43,7 @@ Eclipse LMOS is more than just a platform – it's a community of innovators and
 
 - 📚 [Documentation](https://eclipse.dev/lmos)
 - 💬 [Discussion Forum](https://github.com/orgs/eclipse-lmos/discussions)
-- 💬 [Discord](https://discord.gg/pDZRBB2S)
+- 💬 [Discord](https://discord.gg/zGphr3DKKx)
 - 📝 [Contributing Guidelines](https://eclipse.dev/lmos/contribute)
 
 ## 📦 Core Repositories
