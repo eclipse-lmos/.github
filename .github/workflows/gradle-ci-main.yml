@@ -7,10 +7,6 @@ name: CI
 on:
   workflow_call:
     inputs:
-      push-image:
-        default: true
-        required: false
-        type: boolean
       registry-name:
         default: eclipse-lmos
         type: string
@@ -32,7 +28,7 @@ on:
         required: false
 
 jobs:
-  build-and-test:
+  build-test-and-publish:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -49,10 +45,7 @@ jobs:
           distribution: 'temurin'
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4.3.0
-      - name: Build with Gradle
-        run: ./gradlew build
-      - name: Publish
-        if: inputs.push-image == 'true'
+      - name: Build and publish with Gradle
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.oss-username }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.oss-password }}
@@ -64,10 +57,6 @@ jobs:
           REGISTRY_PASSWORD: ${{ secrets.registry-password }}
           REGISTRY_NAMESPACE: ${{ inputs.registry-name }}
         run: |
-          ./gradlew publishAllPublicationsToMavenCentralRepository
-          if [ ${{ inputs.push-image }} == "true" ]; then
-            ./gradlew bootBuildImage
-            ./gradlew helmPush
-          fi
+          ./gradlew publish
       - name: Generate and submit dependency graph
         uses: gradle/actions/dependency-submission@v4.3.0

@@ -7,10 +7,10 @@ name: Release
 on:
   workflow_call:
     inputs:
-      push-image:
-        default: true
-        required: false
-        type: boolean
+      release-type:
+        default: "Milestone"
+        required: true
+        type: string
       registry-name:
         default: eclipse-lmos
         type: string
@@ -64,11 +64,17 @@ jobs:
           REGISTRY_NAMESPACE: ${{ inputs.registry-name }}
           GH_TOKEN: ${{ github.token }}
         run: |
-          git config --global user.email "cicd@ancf.ai" && git config --global user.name "CICD"
+          git config --global user.email "cicd@ancf.ai"
+          git config --global user.name "CICD"
           git fetch -t -q
           git push origin ':${{ github.ref_name }}'
+
+          # Extract version without -SNAPSHOT suffix from gradle.properties
           version=$(sed -n -E 's/^version[[:blank:]]*=[[:blank:]]*(.*)-SNAPSHOT$/\1/p' gradle.properties)
-          if [ "${{ github.ref_name }}" == "release-milestone" ]; then
+          oldSnapshotVersion="${version}-SNAPSHOT"
+
+          # In case of milestone release, set milestone release version based on previous milestone release versions
+          if [ "${{ github.event.inputs.release-type }}" == "Milestone" ]; then
             oldMilestone=$(git tag -l "${version}-M*" --sort=v:refname | tail -n 1)
             if [ "${oldMilestone}" == "" ]; then
               version=${version}-M1
@@ -76,24 +82,22 @@ jobs:
               version=${version}-M$((10#${oldMilestone##*-M}+1))
             fi
           fi
-          echo "Releasing ${version}"
-          sed -i "s/^version[[:blank:]]*=.*$/version=$version/" gradle.properties
-          git commit -am "Release $version"
-          git tag -a "$version" -m "Release $version"
-          ./gradlew build publishAllPublicationsToMavenCentralRepository
-          if [ ${{ inputs.push-image }} == "true" ]; then
-            ./gradlew bootBuildImage
-            ./gradlew helmPush
-          fi
-          git push origin "${version}"
-          if [ "${{ github.ref_name }}" != "release-milestone" ]; then
+
+          # In case of non-milestone releses, increase the snapshot version in main branch
+          if [ "${{ github.event.inputs.release-type }}" == "Milestone" ]; then
+            nextSnapshotVersion="${oldSnapshotVersion}"
+          else
             minor=$(echo $version | cut -d. -f2)
-            version=${version%%.*}.$((minor+1)).0-SNAPSHOT
-            sed -i "s/^version[[:blank:]]*=.*$/version=$version/" gradle.properties
-            git commit -am "Increase snapshot version to $version"
-            git push origin main
+            nextSnapshotVersion="${version%%.*}.$((minor+1)).0-SNAPSHOT"
           fi
-          if [[ "${version}" == *M* ]]; then
+
+          echo "Releasing ${version}"
+
+          # Update version, build, publish release jars and (optionally) docker image and helm chart
+          ./gradlew :release -Prelease.useAutomaticVersion=true "-Prelease.releaseVersion=${version}" "-Prelease.newVersion=${nextSnapshotVersion}" --no-parallel
+
+          # Generate release notes
+          if [ "${{ github.event.inputs.release-type }}" == "Milestone" ]; then
             gh release create "${version}" --generate-notes --prerelease
           else
             gh release create "${version}" --generate-notes --latest
