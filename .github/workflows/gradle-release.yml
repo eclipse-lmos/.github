@@ -70,7 +70,7 @@ jobs:
           git config --global user.name "CICD"
           git fetch -t -q
           
-          git branch -B release
+          git checkout -B release
 
           # Extract version without -SNAPSHOT suffix from gradle.properties
           version=$(sed -n -E 's/^version[[:blank:]]*=[[:blank:]]*(.*)-SNAPSHOT$/\1/p' gradle.properties)
