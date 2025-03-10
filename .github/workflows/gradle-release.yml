@@ -26,6 +26,8 @@ on:
         required: true
       signing-key-password:
         required: true
+      bot-token:
+        required: true
       registry-username:
         required: false
       registry-password:
@@ -62,7 +64,7 @@ jobs:
           REGISTRY_USERNAME: ${{ secrets.registry-username }}
           REGISTRY_PASSWORD: ${{ secrets.registry-password }}
           REGISTRY_NAMESPACE: ${{ inputs.registry-name }}
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.bot-token }}
         run: |
           git config --global user.email "cicd@ancf.ai"
           git config --global user.name "CICD"
