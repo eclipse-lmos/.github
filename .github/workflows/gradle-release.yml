@@ -95,8 +95,9 @@ jobs:
           echo "Releasing ${version}"
 
           # Update version, build, publish release jars and (optionally) docker image and helm chart
-          ./gradlew publishAndReleaseToMavenCentral -Prelease.useAutomaticVersion=true "-Prelease.releaseVersion=${version}" "-Prelease.newVersion=${nextSnapshotVersion}" --no-parallel --no-configuration-cache
-
+          ./gradlew :release -Prelease.useAutomaticVersion=true "-Prelease.releaseVersion=${version}" "-Prelease.newVersion=${nextSnapshotVersion}" --no-parallel
+          ./gradlew publishAndReleaseToMavenCentral --no-configuration-cache
+          
           # Generate release notes
           if [ "${{ github.event.inputs.release-type }}" == "Milestone" ]; then
             gh release create "${version}" --generate-notes --prerelease
