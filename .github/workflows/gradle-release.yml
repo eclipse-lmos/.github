@@ -99,7 +99,7 @@ jobs:
           # Update version, build, publish release jars and (optionally) docker image and helm chart
           ./gradlew :release -Prelease.useAutomaticVersion=true "-Prelease.releaseVersion=${version}" "-Prelease.newVersion=${nextSnapshotVersion}" --no-parallel
           git checkout "${version}"
-          ./gradlew publishAndReleaseToMavenCentral --no-configuration-cache
+          ./gradlew publish --no-configuration-cache
 
           # Generate release notes
           if [ "${{ github.event.inputs.release-type }}" == "Milestone" ]; then
