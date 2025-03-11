@@ -89,8 +89,9 @@ jobs:
           if [ "${{ github.event.inputs.release-type }}" == "Milestone" ]; then
             nextSnapshotVersion="${oldSnapshotVersion}"
           else
+            major=$(echo $version | cut -d. -f1)
             minor=$(echo $version | cut -d. -f2)
-            nextSnapshotVersion="${version%%.*}.$((minor+1)).0-SNAPSHOT"
+            nextSnapshotVersion="${major}.$((minor+1)).0-SNAPSHOT"
           fi
 
           echo "Releasing ${version}"
