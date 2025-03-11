@@ -30,6 +30,7 @@ on:
 jobs:
   build-test-and-publish:
     runs-on: ubuntu-latest
+    if: startsWith(github.event.commits[0].message, 'Release:') != true && github.actor != 'eclipse-lmos-bot'
     permissions:
       contents: write
       packages: write
