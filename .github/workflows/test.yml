@@ -1,48 +1,26 @@
-# SPDX-FileCopyrightText: 2025 Deutsche Telekom AG and others
-#
-# SPDX-License-Identifier: Apache-2.0
-
-name: Release
+name: Reusable workflow
 
 on:
   workflow_call:
-    inputs:
-      release-type:
-        default: "Milestone"
-        required: true
-        type: string
-      registry-name:
-        default: eclipse-lmos
-        type: string
-        required: false
-    secrets:
-      oss-username:
-        required: true
-      oss-password:
-        required: true
-      signing-key-id:
-        required: true
-      signing-key:
-        required: true
-      signing-key-password:
-        required: true
-      bot-token:
-        required: true
-      registry-username:
-        required: false
-      registry-password:
-        required: false
+    # Map the workflow outputs to job outputs
     outputs:
-      version:
-       value: ${{ jobs.buildAndRelease.outputs.version }}
+      firstword:
+        description: "The first output string"
+        value: ${{ jobs.example_job.outputs.output1 }}
+      secondword:
+        description: "The second output string"
+        value: ${{ jobs.example_job.outputs.output2 }}
 
 jobs:
-  buildAndRelease:
+  example_job:
+    name: Generate output
     runs-on: ubuntu-latest
+    # Map the job outputs to step outputs
     outputs:
-      version: ${{ steps.Publish.outputs.version }}
+      output1: ${{ steps.step1.outputs.firstword }}
+      output2: ${{ steps.step2.outputs.secondword }}
     steps:
-      - name: Publish
-        run: |
-          version=1.2.3
-          echo "version=${version}" >> $GITHUB_OUTPUT
+      - id: step1
+        run: echo "firstword=hello" >> $GITHUB_OUTPUT
+      - id: step2
+        run: echo "secondword=world" >> $GITHUB_OUTPUT
