@@ -32,6 +32,9 @@ on:
         required: false
       registry-password:
         required: false
+    outputs:
+      version:
+       value: ${{ jobs.build-and-release.outputs.version }}
 
 jobs:
   build-and-release:
@@ -39,6 +42,8 @@ jobs:
     permissions:
       contents: write
       packages: write
+    outputs:
+      version: ${{ steps.Publish.outputs.version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4.2.2
@@ -55,6 +60,7 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4.3.0
       - name: Publish
+        id: Publish
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.oss-username }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.oss-password }}
@@ -95,7 +101,8 @@ jobs:
           fi
 
           echo "Releasing ${version}"
-
+          echo "version=${version}" >> $GITHUB_OUTPUT
+          
           # Update version, build, publish release jars and (optionally) docker image and helm chart
           ./gradlew :release -Prelease.useAutomaticVersion=true "-Prelease.releaseVersion=${version}" "-Prelease.newVersion=${nextSnapshotVersion}" --no-parallel
           git checkout "${version}"
