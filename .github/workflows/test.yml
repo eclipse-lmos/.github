@@ -34,14 +34,11 @@ on:
         required: false
     outputs:
       version:
-       value: ${{ jobs.build-and-release.outputs.version }}
+       value: ${{ jobs.buildAndRelease.outputs.version }}
 
 jobs:
-  build-and-release:
+  buildAndRelease:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      packages: write
     outputs:
       version: ${{ steps.Publish.outputs.version }}
     steps:
