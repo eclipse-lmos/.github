@@ -33,12 +33,8 @@ on:
       registry-password:
         required: false
     outputs:
-      firstword:
-        description: "The first output string"
-        value: ${{ jobs.build-and-release.outputs.output1 }}
-      secondword:
-        description: "The second output string"
-        value: ${{ jobs.build-and-release.outputs.output2 }}
+      version:
+        value: ${{ jobs.build-and-release.outputs.version }}
 
 jobs:
   build-and-release:
@@ -48,10 +44,7 @@ jobs:
       contents: write
       packages: write
     outputs:
-      output1: ${{ steps.step1.outputs.firstword }}
-      output2: ${{ steps.step2.outputs.secondword }}
+      version: ${{ steps.step1.outputs.firstword }}
     steps:
       - id: step1
-        run: echo "firstword=hello" >> $GITHUB_OUTPUT
-      - id: step2
-        run: echo "secondword=world" >> $GITHUB_OUTPUT
+        run: echo "version=1.2.3" >> $GITHUB_OUTPUT
