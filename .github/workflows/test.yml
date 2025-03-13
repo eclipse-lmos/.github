@@ -45,7 +45,7 @@ jobs:
       contents: write
       packages: write
     outputs:
-      version: ${{ steps.step1.outputs.firstword }}
+      version: ${{ steps.step1.outputs.version }}
     steps:
       - id: step1
         run: echo "version=1.2.3" >> $GITHUB_OUTPUT
