@@ -6,7 +6,32 @@ name: Release
 
 on:
   workflow_call:
-    # Map the workflow outputs to job outputs
+    inputs:
+      release-type:
+        default: "Milestone"
+        required: true
+        type: string
+      registry-name:
+        default: eclipse-lmos
+        type: string
+        required: false
+    secrets:
+      oss-username:
+        required: true
+      oss-password:
+        required: true
+      signing-key-id:
+        required: true
+      signing-key:
+        required: true
+      signing-key-password:
+        required: true
+      bot-token:
+        required: true
+      registry-username:
+        required: false
+      registry-password:
+        required: false
     outputs:
       firstword:
         description: "The first output string"
@@ -19,7 +44,9 @@ jobs:
   build-and-release:
     name: Generate output
     runs-on: ubuntu-latest
-    # Map the job outputs to step outputs
+    permissions:
+      contents: write
+      packages: write
     outputs:
       output1: ${{ steps.step1.outputs.firstword }}
       output2: ${{ steps.step2.outputs.secondword }}
