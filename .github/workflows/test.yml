@@ -34,7 +34,6 @@ on:
         required: false
     outputs:
       version:
-        description: "The first output string"
         value: ${{ jobs.build-and-release.outputs.version }}
 
 jobs:
