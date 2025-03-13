@@ -38,13 +38,12 @@ on:
 
 jobs:
   build-and-release:
-    name: Generate output
     runs-on: ubuntu-latest
     permissions:
       contents: write
       packages: write
     outputs:
-      version: ${{ steps.step1.outputs.version }}
+      version: ${{ steps.Publish.outputs.version }}
     steps:
-      - id: step1
+      - id: Publish
         run: echo "version=1.2.3" >> $GITHUB_OUTPUT
