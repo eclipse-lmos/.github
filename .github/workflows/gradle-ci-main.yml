@@ -45,7 +45,7 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4.3.0
+        uses: gradle/actions/setup-gradle@v4.4.4
       - name: Build and publish with Gradle
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.oss-username }}
@@ -60,4 +60,4 @@ jobs:
         run: |
           ./gradlew publish
       - name: Generate and submit dependency graph
-        uses: gradle/actions/dependency-submission@v4.3.0
+        uses: gradle/actions/dependency-submission@v4.4.4
