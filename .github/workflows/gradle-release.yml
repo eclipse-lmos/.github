@@ -46,7 +46,7 @@ jobs:
       version: ${{ steps.Publish.outputs.version }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v6.0.2
         with:
           ref: main
           token: ${{ secrets.bot-token }}
