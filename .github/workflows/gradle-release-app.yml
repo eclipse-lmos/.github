@@ -54,7 +54,7 @@ jobs:
           app-id: ${{ secrets.bot-app-id }}
           private-key: ${{ secrets.bot-private-key }}
       - name: Checkout
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v6.0.2
         with:
           ref: main
           token: ${{ steps.app-token.outputs.token }}
