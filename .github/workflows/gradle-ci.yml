@@ -23,7 +23,7 @@ jobs:
           java-version: '25'
           distribution: 'temurin'
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4.3.0
+        uses: gradle/actions/setup-gradle@v6.0.1
       - name: Build with Gradle
         run: ./gradlew build
       - name: Upload JUnit XML test results
